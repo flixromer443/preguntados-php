@@ -1,0 +1,25 @@
+version: '3.1'
+services:
+  db:
+    image: mysql:5.7
+#    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes: 
+      - ./dump/:/var/lib/mysql
+  php-apache:
+    build: Dockerfiles/php-apache/
+    links:
+      - db:mysqldb
+    volumes: 
+      - ./www/:/var/www/html
+    ports:
+      - 8000:80
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+    ports:
+      - 8001:80
+    links:
+      - db:mysqldb
